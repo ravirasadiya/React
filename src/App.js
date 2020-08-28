@@ -6,7 +6,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      monster: [],
+      monsters: [],
+      searchText: '',
     };
   }
 
@@ -14,14 +15,26 @@ class App extends Component {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
       .then((res) => {
-        this.setState({ monster: res });
+        this.setState({ monsters: res });
       });
   }
 
   render() {
+    const { monsters, searchText } = this.state;
+    const filteredMonster = monsters.filter((monster) =>
+      monster.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    console.log(monsters);
     return (
       <div className='App'>
-        <CardList monster={this.state.monster} />
+        <input
+          type='search'
+          placeholder='Search Monster'
+          onChange={(e) => {
+            this.setState({ searchText: e.target.value });
+          }}
+        />
+        <CardList monster={filteredMonster} />
       </div>
     );
   }
